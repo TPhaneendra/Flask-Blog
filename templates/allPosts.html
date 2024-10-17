@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    All Posts
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">All Blog Posts</h1>
+
+    <div class="row">
+        {% if posts %}
+            {% for post in posts %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100" style="min-height: 300px;">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ post.title }}</h4>
+                        <p class="card-text post-content" id="post-content-{{ post.pid }}">
+                            {{ post.content[:150] }}... <!-- Display truncated content -->
+                        </p>
+                        <!-- Add the full content as a data attribute -->
+                        <a href="javascript:void(0)" class="read-more" data-full-content="{{ post.content }}" data-post-id="{{ post.pid }}" onclick="toggleContent(this)">Read More</a>
+                        
+                        <!-- Buttons for Edit and Delete -->
+                        {% if post.user_id == current_user.uid %} <!-- Only show for the author -->
+                            <a href="{{ url_for('edit', post_id=post.pid) }}" class="btn btn-warning btn-sm mt-2">Edit</a>
+                            <form action="{{ url_for('delete', post_id=post.pid) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm mt-2">Delete</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>Posted by: {{ post.user.username }}</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">No posts available at the moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function toggleContent(element) {
+        var postId = element.getAttribute('data-post-id');
+        var fullContent = element.getAttribute('data-full-content');
+        var contentElem = document.getElementById('post-content-' + postId);
+        
+        if (element.textContent === 'Read More') {
+            // Expand to full content
+            contentElem.textContent = fullContent;
+            element.textContent = 'Show Less';
+        } else {
+            // Collapse content
+            contentElem.textContent = fullContent.substring(0, 150) + '...'; // Truncate the content again
+            element.textContent = 'Read More';
+        }
+    }
+</script>
+
+{% endblock %}

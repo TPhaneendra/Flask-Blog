@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Create Blog Post
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Create Blog Post</h1>
+
+    {% if current_user.is_authenticated %}
+        <h3>Hello {{ current_user.username }}</h3>
+
+        <form action="{{url_for('create')}}" method="post">
+            <div class="mb-3">
+                <input type="text" name="title" class="form-control" placeholder="Enter Title of the blog" required>
+            </div>
+            <div class="mb-3">
+                <textarea name="content" class="form-control" rows="4" placeholder="Write your content here" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Blog</button>
+        </form>
+
+    {% else %}
+        <div class="alert alert-danger mt-4">Invalid Authentication</div>
+    {% endif %}
+</div>
+{% endblock %}

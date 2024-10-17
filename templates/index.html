@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Welcome to Blogs</h1>
+
+    {% if current_user.is_authenticated %}
+        <h3>Hello {{ current_user.username }}</h3>
+    {% else %}
+        <h3>Hello! Please Login or Signup</h3>
+        <a href="{{url_for('login')}}" class="btn btn-primary">Login</a>
+        <a href="{{url_for('signup')}}" class="btn btn-secondary">Signup</a>
+    {% endif %}
+
+    <a href="{{url_for('logout')}}" class="btn btn-danger">Logout</a>
+</div>
+{% endblock %}
